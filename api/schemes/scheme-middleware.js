@@ -1,11 +1,15 @@
 const schemes = require('../schemes/scheme-model')
+const colors = require('colors')
 
-const checkSchemeId = (req, res, next) => {
+const checkSchemeId = async (req, res, next) => {
   const schemeId = req.params.scheme_id;
-  const scheme = schemes.findById(schemeId);
+  console.log(`scheme ID: ${schemeId}`.bgCyan.black);
+  const scheme = await schemes.findById(schemeId);
   if (!scheme) {
+    console.log(`scheme not found: ${schemeId}`.bgRed.white);
     res.status(404).json({ message: `scheme with scheme_id ${schemeId} not found` });
   } else {
+    console.log(`scheme found: ${schemeId}`.bgGreen.black);
     next();
   }
 }
@@ -15,7 +19,7 @@ const validateScheme = (req, res, next) => {
   if (!schemeName || schemeName.length === 0 || typeof schemeName !== 'string') {
     res.status(400).send({ message: 'invalid scheme_name' });
   } else {
-    return next();
+    next();
   }
 }
 
@@ -27,7 +31,7 @@ const validateStep = (req, res, next) => {
   } else if (!stepNumber || stepNumber < 1 || typeof stepNumber !== 'number') {
     res.status(400).send({ message: 'invalid step' });
   } else {
-    return next();
+    next();
   }
 };
 

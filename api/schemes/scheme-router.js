@@ -1,6 +1,10 @@
 // DO NOT CHANGE THIS FILE
 const express = require('express')
-const { checkSchemeId, validateScheme, validateStep } = require('./scheme-middleware')
+const {
+  checkSchemeId,
+  validateScheme,
+  validateStep
+} = require('./scheme-middleware')
 const schemes = require('./scheme-model.js')
 
 const router = express.Router()
@@ -54,13 +58,13 @@ router.get('/', async (req, res, next) => {
   }
 */
 router.get('/:scheme_id', checkSchemeId, async (req, res, next) => {
-  const { scheme_id } = req.params
+  const { scheme_id } = req.params;
 
   try {
     const scheme = await schemes.findById(scheme_id)
     res.send(scheme)
   } catch (error) {
-    next(error)
+    res.status(500).send({ error })
   }
 })
 
