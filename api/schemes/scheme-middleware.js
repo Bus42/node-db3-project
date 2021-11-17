@@ -1,4 +1,4 @@
-const schemes = require('./schemes')
+const schemes = require('../schemes/scheme-model')
 
 const checkSchemeId = (req, res, next) => {
   const schemeId = req.params.scheme_id;
