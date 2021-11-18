@@ -48,14 +48,16 @@ router.get('/:scheme_id', checkSchemeId, async (req, res) => {
     }
   ]
 */
-router.get('/:scheme_id/steps', checkSchemeId, async (req, res, next) => {
+router.get('/:scheme_id/steps', checkSchemeId, async (req, res) => {
   const { scheme_id } = req.params
 
   schemes.findSteps(scheme_id)
     .then(steps => {
-      res.json(steps)
+      res.send(steps)
     })
-    .catch(next)
+    .catch((error) => {
+      res.status(500).send({ error })
+    })
 })
 
 /*
