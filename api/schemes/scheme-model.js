@@ -2,23 +2,29 @@ const db = require('../../data/db-config');
 
 async function find() { // EXERCISE A
 
-  return db.select('*').from('schemes as sc')
-    .count('st.step_id as number_of_steps')
-    .leftJoin('steps as st', 'sc.scheme_id', '=', 'st.scheme_id')
-    .groupBy('sc.scheme_id')
-    .orderBy('sc.scheme_id');
+  try {
+    return db('schemes as sc')
+      .leftJoin('steps as st', 'sc.scheme_id', 'st.scheme_id')
+      .groupBy('sc.scheme_id')
+      .select('sc.*')
+      .count('st.step_id as number_of_steps')
+      .orderBy('sc.scheme_id');
+  } catch (error) {
+    console.log(error);
+  }
 }
+
 
 async function findById(scheme_id) { // EXERCISE B
 
   try {
-    const rows = await db.select('*').from('schemes as sc')
-      .leftJoin('steps as st', 'sc.scheme_id', '=', 'st.scheme_id')
+    const rows = await db('schemes as sc')
+      .leftJoin('steps as st', 'sc.scheme_id', 'st.scheme_id')
       .where('sc.scheme_id', scheme_id)
       .orderBy('st.step_number');
 
     const result = {
-      scheme_id: rows[0].scheme_id,
+      scheme_id: Number(scheme_id),
       scheme_name: rows[0].scheme_name,
       steps: rows[0].step_id ? rows.map(row => ({
         step_id: row.step_id,

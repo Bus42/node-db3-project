@@ -9,24 +9,6 @@ const schemes = require('./scheme-model.js')
 
 const router = express.Router()
 
-/**
-  [GET] /api/schemes
-
-  response:
-  [
-    {
-      "scheme_id": 1,
-      "scheme_name": "World Domination",
-      "number_of_steps": 3
-    },
-    {
-      "scheme_id": 2,
-      "scheme_name": "Get Rich Quick",
-      "number_of_steps": 2
-    },
-    // etc
-  ]
- */
 router.get('/', async (req, res, next) => {
   try {
     schemes.find()
@@ -36,30 +18,9 @@ router.get('/', async (req, res, next) => {
   }
 })
 
-/*
-  [GET] /api/schemes/2
 
-  response:
-  {
-    "scheme_id": 2,
-    "scheme_name": "Get Rich Quick",
-    "steps": [
-      {
-          "step_id": 5,
-          "step_number": 1,
-          "instructions": "collect all the sheep in Scotland"
-      },
-      {
-          "step_id": 4,
-          "step_number": 2,
-          "instructions": "profit"
-      }
-    ]
-  }
-*/
-router.get('/:scheme_id', checkSchemeId, async (req, res, next) => {
+router.get('/:scheme_id', checkSchemeId, async (req, res) => {
   const { scheme_id } = req.params;
-
   try {
     const scheme = await schemes.findById(scheme_id)
     res.send(scheme)
