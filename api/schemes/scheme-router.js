@@ -18,7 +18,6 @@ router.get('/', async (req, res, next) => {
   }
 })
 
-
 router.get('/:scheme_id', checkSchemeId, async (req, res) => {
   const { scheme_id } = req.params;
   try {
@@ -29,25 +28,6 @@ router.get('/:scheme_id', checkSchemeId, async (req, res) => {
   }
 })
 
-/*
-  [GET] /api/schemes/2/steps
-
-  response:
-  [
-    {
-      "step_id": 5,
-      "step_number": 1,
-      "instructions": "collect all the sheep in Scotland",
-      "scheme_name": "Get Rich Quick"
-    },
-    {
-      "step_id": 4,
-      "step_number": 2,
-      "instructions": "profit",
-      "scheme_name": "Get Rich Quick"
-    }
-  ]
-*/
 router.get('/:scheme_id/steps', checkSchemeId, async (req, res) => {
   const { scheme_id } = req.params
 
