@@ -9,12 +9,12 @@ const schemes = require('./scheme-model.js')
 
 const router = express.Router()
 
-router.get('/', async (req, res, next) => {
+router.get('/', async (req, res) => {
   try {
     schemes.find()
-      .then(schemes => res.send(schemes))
+      .then(schemes => res.status(200).send(schemes))
   } catch (error) {
-    next(error)
+    res.status(500).send(error)
   }
 })
 
@@ -22,9 +22,9 @@ router.get('/:scheme_id', checkSchemeId, async (req, res) => {
   const { scheme_id } = req.params;
   try {
     const scheme = await schemes.findById(scheme_id)
-    res.send(scheme)
+    res.status(200).send(scheme)
   } catch (error) {
-    res.status(500).send({ error })
+    res.status(500).send(error)
   }
 })
 
@@ -32,31 +32,22 @@ router.get('/:scheme_id/steps', checkSchemeId, async (req, res) => {
   const { scheme_id } = req.params
 
   schemes.findSteps(scheme_id)
-    .then(steps => {
-      res.send(steps)
+    .then(response => {
+      res.send(response)
     })
-    .catch((error) => {
-      res.status(500).send({ error })
+    .catch(error => {
+      res.status(500).send(error)
     })
 })
 
-/*
-  [POST] /api/schemes { "scheme_name": "Take Ovah" }
-
-  response:
-  {
-    "scheme_id": 8,
-    "scheme_name": "Take Ovah"
-  }
-*/
-router.post('/', validateScheme, async (req, res, next) => {
+router.post('/', validateScheme, async (req, res) => {
   const scheme = req.body
 
   schemes.add(scheme)
-    .then(scheme => {
-      res.status(201).json(scheme)
+    .then(response => {
+      res.status(201).json(response)
     })
-    .catch(next)
+    .catch(error => res.status(500).send(error))
 })
 
 /*
@@ -78,18 +69,17 @@ router.post('/', validateScheme, async (req, res, next) => {
     }
   ]
 */
-router.post('/:scheme_id/steps', checkSchemeId, validateStep, (req, res, next) => {
+router.post('/:scheme_id/steps', checkSchemeId, validateStep, async (req, res) => {
   const step = req.body
   const { scheme_id } = req.params
-
-  schemes.addStep(scheme_id, step)
-    .then(allSteps => {
-      res.status(201).json(allSteps)
+  schemes.addStep({ ...step, scheme_id })
+    .then((response) => {
+      res.status(201).send(response)
     })
-    .catch(next)
+    .catch(error => res.status(500).send({ error }))
 })
 
-router.use(async (err, req, res, next) => { // eslint-disable-line
+router.use(async (err, req, res) => { // eslint-disable-line
   res.status(err.status || 500).json({
     sageAdvice: 'Finding the real error is 90% of the bug fix',
     message: err.message,

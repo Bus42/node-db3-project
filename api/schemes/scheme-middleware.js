@@ -7,7 +7,7 @@ const checkSchemeId = async (req, res, next) => {
   const scheme = await schemes.findById(schemeId);
   if (!scheme) {
     console.log(`scheme not found: ${schemeId}`.bgRed.white);
-    res.status(404).json({ message: `scheme with scheme_id ${schemeId} not found` });
+    res.status(404).send({ message: `scheme with scheme_id ${schemeId} not found` });
   } else {
     console.log(`scheme found: ${schemeId}`.bgGreen.black);
     next();
