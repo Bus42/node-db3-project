@@ -1,4 +1,5 @@
 const schemes = require('../schemes/scheme-model')
+// eslint-disable-next-line no-unused-vars
 const colors = require('colors')
 
 const checkSchemeId = async (req, res, next) => {
